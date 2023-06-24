@@ -37,7 +37,8 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod();
     });
 });
-
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 app.UseCors();
