@@ -20,7 +20,7 @@ namespace FitHub.Controllers
             _custometService = custometService;
         }
         [HttpPost]
-        [SwaggerResponse(200, "成功", typeof(Result<string?>))]
+        [SwaggerResponse(200, "成功", typeof(Result<string>))]
         public IActionResult AddCustomer([FromBody] AddCustomerViewModel model)
         {
             var result = _custometService.AddCustomer(model.Name, model.Address, model.City, model.State, model.Country, model.Zip);
@@ -35,7 +35,7 @@ namespace FitHub.Controllers
 
         }
         [HttpPut]
-        [SwaggerResponse(200, "成功", typeof(Result<string?>))]
+        [SwaggerResponse(200, "成功", typeof(Result<string>))]
         public IActionResult UpdateCustomer([FromBody] UpdateCustomerViewModel model)
         {
             var result = _custometService.UpdateCustomer(model.CustomerId, model.Name, model.Address, model.City, model.State, model.Country, model.Zip);
@@ -50,7 +50,7 @@ namespace FitHub.Controllers
 
         }
         [HttpDelete("{customerId}")]
-        [SwaggerResponse(200, "成功", typeof(Result<string?>))]
+        [SwaggerResponse(200, "成功", typeof(Result<string>))]
         public IActionResult DelCustomer(string customerId)
         {
             var result = _custometService.DelCustomer(customerId);
@@ -96,9 +96,9 @@ namespace FitHub.Controllers
         }
         [HttpGet("filter")]
         [SwaggerResponse(200, "成功", typeof(Result<List<CustomerDto>>))]
-        public IActionResult GetFilterCustometList(string name, string address, string city, string state, string country, string zip)
+        public IActionResult GetFilterCustometList(string name, string address, string city, string state, string country, string zip, int pageNo, int pageSize)
         {
-            var result = _custometService.GetFilterCustomerList(name, address, city, state, country, zip);
+            var result = _custometService.GetFilterCustomerList(name, address, city, state, country, zip, pageNo, pageSize);
             if (result.StatusCode == 200)
             {
                 return Ok(result.Items);

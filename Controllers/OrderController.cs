@@ -21,7 +21,7 @@ namespace FitHub.Controllers
         }
 
         [HttpPost]
-        [SwaggerResponse(200, "成功", typeof(Result<string?>))]
+        [SwaggerResponse(200, "成功", typeof(Result<string>))]
         public IActionResult AddOrder([FromBody] AddOrderViewModel model)
         {
             var result = _orderService.AddOrder(model.CustomerId, model.TotalAmount, model.Status, model.OrderDate, model.SalesName);
@@ -36,7 +36,7 @@ namespace FitHub.Controllers
 
         }
         [HttpPut]
-        [SwaggerResponse(200, "成功", typeof(Result<string?>))]
+        [SwaggerResponse(200, "成功", typeof(Result<string>))]
         public IActionResult UpdateOrder([FromBody] UpdateOrderViewModel model)
         {
             var result = _orderService.UpdateOrder(model.OrderId, model.CustomerId, model.TotalAmount, model.Status, model.OrderDate, model.SalesName);
@@ -52,7 +52,7 @@ namespace FitHub.Controllers
 
         }
         [HttpDelete("{orderId}")]
-        [SwaggerResponse(200, "成功", typeof(Result<string?>))]
+        [SwaggerResponse(200, "成功", typeof(Result<string>))]
         public IActionResult DelOrder(string orderId)
         {
             var result = _orderService.DelOrder(orderId);
@@ -96,9 +96,9 @@ namespace FitHub.Controllers
         }
         [HttpGet("filter")]
         [SwaggerResponse(200, "成功", typeof(Result<List<OrderDto>>))]
-        public IActionResult GetFilterOrderList(string orderId, string customerId, int status, bool isTimeOver, DateTime OrderDate, string salesName)
+        public IActionResult GetFilterOrderList(string orderId, string customerId, int status, bool isTimeOver, DateTime OrderDate, string salesName,int pageNo,int pageSize)
         {
-            var result = _orderService.GetFilterOrderList(orderId, customerId, status, isTimeOver, OrderDate, salesName);
+            var result = _orderService.GetFilterOrderList(orderId, customerId, status, isTimeOver, OrderDate, salesName,pageNo,pageSize);
             if (result.StatusCode == 200)
             {
                 return Ok(result.Items);

@@ -17,9 +17,9 @@ namespace FitHub.Service
             _dbContext = dbContext;
         }
 
-        public Result<string?> AddOrder(string customerId, decimal totalAmount, int status, DateTime OrderDate, string salesName)
+        public Result<string> AddOrder(string customerId, decimal totalAmount, int status, DateTime OrderDate, string salesName)
         {
-            var result = new Result<string?>();
+            var result = new Result<string>();
             try
             {
                 var order = new Order()
@@ -42,9 +42,9 @@ namespace FitHub.Service
             }
             return result;
         }
-        public Result<string?> UpdateOrder(string orderId, string customerId, decimal totalAmount, int status, DateTime OrderDate, string salesName)
+        public Result<string> UpdateOrder(string orderId, string customerId, decimal totalAmount, int status, DateTime OrderDate, string salesName)
         {
-            var result = new Result<string?>();
+            var result = new Result<string>();
             try
             {
                 var order = _dbContext.Order.FirstOrDefault(x => x.Id == orderId);
@@ -71,9 +71,9 @@ namespace FitHub.Service
             }
             return result;
         }
-        public Result<string?> DelOrder(string OrderId)
+        public Result<string> DelOrder(string OrderId)
         {
-            var result = new Result<string?>();
+            var result = new Result<string>();
             try
             {
                 var order = _dbContext.Order.FirstOrDefault(x => x.Id == OrderId);
@@ -165,7 +165,7 @@ namespace FitHub.Service
                     }
                 );
                 var total = order.Count();
-                var totalPage = total / pageSize;
+                var totalPage = (int)Math.Ceiling((double)total / pageSize);
                 if (total % pageSize != 0)
                 {
                     totalPage++;
@@ -190,14 +190,15 @@ namespace FitHub.Service
             return result;
 
         }
-        public Result<List<OrderDto>> GetFilterOrderList(string orderId, string customerId, int status, bool isTimeOver, DateTime OrderDate, string salesName)
+        public Result<OrderPageDto> GetFilterOrderList(string orderId, string customerId, int status, bool isTimeOver, DateTime OrderDate, string salesName, int pageNo, int pageSize)
         {
-            var result = new Result<List<OrderDto>>();
+            Result<OrderPageDto> resultDto = new Result<OrderPageDto>();
+            OrderPageDto result = new OrderPageDto();
             try
             {
                 var order = _dbContext.Order.Where(
-                    x => orderId.Contains(x.Id) || customerId.Contains(x.CustomerId) || x.Status == status ||
-                    (isTimeOver ? x.OrderDate >= OrderDate : x.OrderDate <= OrderDate) || salesName.Contains(x.SalesName)
+                    x => orderId.Contains(x.Id ?? string.Empty) || customerId.Contains(x.CustomerId ?? string.Empty) || x.Status == status ||
+                    (isTimeOver ? x.OrderDate >= OrderDate : x.OrderDate <= OrderDate) || salesName.Contains(x.SalesName ?? string.Empty)
                 )
                 .Join
                 (
@@ -220,17 +221,20 @@ namespace FitHub.Service
                         CustomerName = x.customer.Name
                     }
                 );
-
-                var orderDto = order.ToList();
-                result.Items = orderDto;
-                result.StatusCode = 200;
+                result.PageNo = pageNo;
+                result.PageSize = pageSize;
+                result.Items = order.Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+                result.Total = order.Count();
+                result.TotalPage = (int)Math.Ceiling((double)result.Total / pageSize);
+                resultDto.Items = result;
+                resultDto.StatusCode = 200;
             }
             catch (Exception e)
             {
-                result.ErrorMessage = e.Message;
-                result.StatusCode = 500;
+                resultDto.ErrorMessage = e.Message;
+                resultDto.StatusCode = 500;
             }
-            return result;
+            return resultDto;
 
         }
 

@@ -17,9 +17,9 @@ namespace FitHub.Service
             _dbContext = dbContext;
         }
 
-        public Result<string?> AddCustomer(string name, string address, string city, string status, string country, string zip)
+        public Result<string> AddCustomer(string name, string address, string city, string status, string country, string zip)
         {
-            var result = new Result<string?>();
+            var result = new Result<string>();
             try
             {
                 var goal = _dbContext.Customer.Where(x => x.Name == name).FirstOrDefault();
@@ -52,9 +52,9 @@ namespace FitHub.Service
             return result;
 
         }
-        public Result<string?> UpdateCustomer(string custometId, string name, string address, string city, string status, string country, string zip)
+        public Result<string> UpdateCustomer(string custometId, string name, string address, string city, string status, string country, string zip)
         {
-            var result = new Result<string?>();
+            var result = new Result<string>();
             try
             {
                 var customer = _dbContext.Customer.FirstOrDefault(x => x.Id == custometId);
@@ -84,9 +84,9 @@ namespace FitHub.Service
             return result;
 
         }
-        public Result<string?> DelCustomer(string custometId)
+        public Result<string> DelCustomer(string custometId)
         {
-            var result = new Result<string?>();
+            var result = new Result<string>();
             try
             {
                 var customer = _dbContext.Customer.FirstOrDefault(x => x.Id == custometId);
@@ -157,7 +157,7 @@ namespace FitHub.Service
                     PageNo = pageNo,
                     PageSize = pageSize,
                     Total = _dbContext.Customer.Count(),
-                    TotalPage = _dbContext.Customer.Count() / pageSize,
+                    TotalPage = (int)Math.Ceiling((double)_dbContext.Customer.Count() / pageSize),
                     Items = new List<CustomerDto>()
                 };
                 foreach (var customer in customerList)
@@ -185,36 +185,35 @@ namespace FitHub.Service
             return result;
 
         }
-        public Result<List<CustomerDto>> GetFilterCustomerList(string name, string address, string city, string status, string country, string zip)
+        public Result<CustomerPageDto> GetFilterCustomerList(string name, string address, string city, string status, string country, string zip, int pageNo, int pageSize)
         {
-            var result = new Result<List<CustomerDto>>();
+            Result<CustomerPageDto> resultDto = new Result<CustomerPageDto>();
+            CustomerPageDto result = new CustomerPageDto();
             try
             {
-                var customerList = _dbContext.Customer.Where(x => x.Name.Contains(name) || x.Address.Contains(address) || x.City.Contains(city) || x.State.Contains(status) || x.Country.Contains(country) || x.Zip.Contains(zip)).ToList();
-                var customerDtoList = new List<CustomerDto>();
-                foreach (var customer in customerList)
-                {
-                    var customerDto = new CustomerDto()
-                    {
-                        CustomerId = customer.Id,
-                        Name = customer.Name,
-                        Address = customer.Address,
-                        City = customer.City,
-                        Country = customer.Country,
-                        State = customer.State,
-                        Zip = customer.Zip
-                    };
-                    customerDtoList.Add(customerDto);
-                }
-                result.Items = customerDtoList;
-                result.StatusCode = 200;
+                var customerList = _dbContext.Customer.Where(x => x.Name.Contains(name??string.Empty) || x.Address.Contains(address??string.Empty) || x.City.Contains(city??string.Empty) || x.State.Contains(status??string.Empty) || x.Country.Contains(country??string.Empty) || x.Zip.Contains(zip??string.Empty));
+                result.PageNo = pageNo;
+                result.PageSize = pageSize;
+                result.Total = customerList.Count();
+                result.TotalPage = (int)Math.Ceiling((double)customerList.Count() / pageSize);
+                result.Items = customerList.Skip((pageNo-1)*pageSize).Take(pageSize).Select(x=>new CustomerDto() { 
+                    CustomerId = x.Id,
+                    Name = x.Name,
+                    Address = x.Address,
+                    City = x.City,
+                    Country = x.Country,
+                    State = x.State,
+                    Zip = x.Zip
+                }).ToList();
+                resultDto.Items = result;
+                resultDto.StatusCode = 200;
             }
             catch (Exception e)
             {
-                result.ErrorMessage = e.Message;
-                result.StatusCode = 500;
+                resultDto.ErrorMessage = e.Message;
+                resultDto.StatusCode = 500;
             }
-            return result;
+            return resultDto;
 
         }
 

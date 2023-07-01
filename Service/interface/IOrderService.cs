@@ -8,16 +8,16 @@ namespace FitHub.Service
 {
     public interface IOrderService
     {
-        Result<string?> AddOrder(string customerId, decimal totalAmount, int status, DateTime OrderDate, string salesName);
+        Result<string> AddOrder(string customerId, decimal totalAmount, int status, DateTime OrderDate, string salesName);
 
-        Result<string?> UpdateOrder(string orderId, string customerId, decimal totalAmount, int status, DateTime OrderDate, string salesName);
+        Result<string> UpdateOrder(string orderId, string customerId, decimal totalAmount, int status, DateTime OrderDate, string salesName);
 
-        Result<string?> DelOrder(string OrderId);
+        Result<string> DelOrder(string OrderId);
 
         Result<OrderDto> GetOrder(string OrderId);
 
         Result<OrderPageDto> GetOrderList(int pageNo, int pageSize);
-        Result<List<OrderDto>> GetFilterOrderList(string orderId, string customerId, int status, bool isTimeOver, DateTime OrderDate, string salesName);
+       Result<OrderPageDto> GetFilterOrderList(string orderId, string customerId, int status, bool isTimeOver, DateTime OrderDate, string salesName,int pageNo, int pageSize);
 
 
     }

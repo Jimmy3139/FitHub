@@ -17,22 +17,22 @@ namespace FitHub.Libary.DataBase.Entities
         public string Id { get; set; }
 
         [Column("Name")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [Column("Country")]
-        public string? Country { get; set; }
+        public string Country { get; set; }
 
         [Column("City")]
-        public string? City { get; set; }
+        public string City { get; set; }
 
         [Column("State")]
-        public string? State { get; set; }
+        public string State { get; set; }
 
         [Column("Address")]
-        public string? Address { get; set; }
+        public string Address { get; set; }
 
         [Column("Zip")]
-        public string? Zip { get; set; }
+        public string Zip { get; set; }
 
         [Column("Status")]
         public int? Status { get; set; }

@@ -9,10 +9,10 @@ namespace FitHub.Libary.DataBase.Entities
     {
         [Key]
         [Column("ID")]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         [Column("Customer_ID")]
-        public string? CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         [Column("TotalAmount")]
         public decimal TotalAmount { get; set; }
@@ -24,6 +24,6 @@ namespace FitHub.Libary.DataBase.Entities
         public DateTime OrderDate { get; set; }
 
         [Column("Sales_Name")]
-        public string? SalesName { get; set; }
+        public string SalesName { get; set; }
     }
 }
