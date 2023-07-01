@@ -24,6 +24,7 @@ namespace FitHub.Service
             {
                 var order = new Order()
                 {
+                    Id = Guid.NewGuid().ToString().Substring(0, 15),
                     CustomerId = customerId,
                     TotalAmount = totalAmount,
                     Status = status,
