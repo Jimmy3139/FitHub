@@ -29,16 +29,16 @@ function SideMenu() {
           navigate(item.key);
         }}
         items={[
-          {
-            label: "Dashboard",
-            icon: <AppstoreOutlined />,
-            key: "/",
-          },
-          {
-            label: "Inventory",
-            icon: <ShopOutlined />,
-            key: "/inventory",
-          },
+          // {
+          //   label: "Dashboard",
+          //   icon: <AppstoreOutlined />,
+          //   key: "/",
+          // },
+          // {
+          //   label: "Inventory",
+          //   icon: <ShopOutlined />,
+          //   key: "/inventory",
+          // },
           {
             label: "Orders",
             icon: <ShoppingCartOutlined />,

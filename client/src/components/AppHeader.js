@@ -5,18 +5,7 @@ function AppHeader() {
   return (
     // <div className="AppHeader">
     <Typography.Title>
-      <div className="buttonContainer">
-        <div className="searchButtonContainer">
-          <button style={{ fontSize: 15 }} className="searchButton">
-            搜尋
-          </button>
-        </div>
-        <div className="addButtonContainer">
-          <button style={{ fontSize: 15 }} className="addButton">
-            新增資料
-          </button>
-        </div>
-      </div>
+      <div className="buttonContainer"></div>
     </Typography.Title>
     // </div>
     //   {/* <Space>

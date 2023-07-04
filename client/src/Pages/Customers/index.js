@@ -5,55 +5,37 @@ import { getCustomerList } from "../../api";
 function Customers() {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
-  const [tableParams, setTableParams] = useState({
-    pagination: {
-      current: 1,
-      pageSize: 30,
-    },
-  });
+  // const [tableParams, setTableParams] = useState({
+  //   pagination: {
+  //     current: 1,
+  //     pageSize: 30,
+  //   },
+  // });
 
-  const fetchData = () => {
+  useEffect(() => {
     setLoading(true);
-    getCustomerList(
-      tableParams.pagination.current,
-      tableParams.pagination.pageSize
-    ).then((res) => {
+    getCustomerList(1, 90).then((res) => {
       setDataSource(res.data.items);
       setLoading(false);
       console.log(res);
-      setTableParams({
-        pagination: {
-          total: 90,
-        },
-      });
     });
-  };
-  useEffect(() => {
-    fetchData();
   }, []);
-  // const handleTableChange = (pagination) => {
-  //   setTableParams({
-  //     pagination: {
-  //       ...pagination,
-  //     },
-  //   });
-  // };
 
   return (
     <Space size={20} direction="vertical">
       <Typography.Title level={4}>Customers</Typography.Title>
       <Table
         loading={loading}
-        pagination={tableParams.pagination}
-        // onChange={handleTableChange}
         columns={[
           {
             title: "CustID",
             dataIndex: "customerId",
+            fixed: "left", // 添加固定列属性
           },
           {
             title: "Name",
             dataIndex: "name",
+            fixed: "left",
           },
           {
             title: "Country",
@@ -86,9 +68,11 @@ function Customers() {
           },
         ]}
         dataSource={dataSource}
-        // pagination={{
-        //   pageSize: 30,
-        // }}
+        pagination={{
+          pageSize: 30,
+          pageSizeOptions: [], //移除選擇要印出來的數量
+        }}
+        scroll={{ x: "max-content" }} // 这里添加了滚动属性，以便在需要时可以滚动查看其他列
       ></Table>
     </Space>
   );
